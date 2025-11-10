@@ -56,8 +56,14 @@ body{scroll-snap-type:y proximity;}
 
 /* --- SEKCJE --- */
 .section{
-  width:100%;height:100vh;position:relative;overflow:hidden;
-  display:flex;justify-content:center;align-items:flex-end;scroll-snap-align:start;
+  width:100%;
+  min-height:100vh;
+  padding: 20px 0;
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  justify-content:center;
+  align-items:flex-end;scroll-snap-align:start;
 }
 .section img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;filter:brightness(0.6);opacity:0;transition:opacity 1s ease;}
 .section.active img{opacity:1;}
@@ -163,19 +169,27 @@ body{scroll-snap-type:y proximity;}
 }
 
 .strategy-content{
-  background:rgba(255,255,255,0.1);backdrop-filter:blur(8px);
+  background:rgba(255,255,255,0.1);
+  backdrop-filter:blur(8px);
   border:2px solid rgba(255,255,255,0.3);
   border-radius:12px;
-  padding:30px;
-  max-width:800px;width:90%;
+  padding:20px;
+  width:95%;
+  max-width: 700px;
   color:#fff;
   text-align:center;
+  font-size: clamp(14px, 2vw, 18px);
   box-shadow:0 0 20px rgba(0,0,0,0.5);
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
 }
-.strategy-content h2{margin-bottom:15px;color:#90EE90;}
+
+.strategy-content h2{
+margin-bottom:15px;color:#90EE90;
+font-size: clamp(18px, 4vw, 26px);
+}
+
 .close-btn{
   background-color:#2E8B57;color:#fff;border:none;padding:10px 25px;
   border-radius:8px;font-weight:bold;cursor:pointer;transition:background .3s;
@@ -242,6 +256,106 @@ input {
   #reset { font-size: 14px; }
   .remaining { font-size: 12px; }
 }
+/* === MENU BONECZNE - RESPONSYWNOSC === */
+@media (max-width: 600px) {
+  .menu-list {
+    left: 50%;
+    top: 100px;
+    transform: translateX(-50%);
+    width: 80%;
+    text-align: center;
+  }
+
+  .menu-list li a {
+    font-size: 20px;
+    display: block;
+  }
+
+  .menu-btn {
+    top: 10px;
+    left: 10px;
+    font-size: 24px;
+    padding: 10px 14px;
+  }
+
+  .dark-toggle {
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+  }
+}
+
+/* === UKŁAD BOARD KALKULATORA === */
+@media (max-width: 600px) {
+  .board {
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 8px;
+  }
+
+  .tile img {
+    width: 60%;
+  }
+
+  input {
+    width: 36px;
+    font-size: 13px;
+  }
+}
+@media (max-width: 768px) {
+  .slide-info h2 {
+    font-size: 22px;
+  }
+
+  .slide-info p {
+    font-size: 14px;
+    padding: 0 10px;
+  }
+
+  .slide-text {
+    margin-bottom: 40px;
+  }
+
+  .section img {
+    object-position: center;
+  }
+}
+
+@media (max-width: 800px) {
+  .tournaments-columns {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .column {
+    width: 90%;
+  }
+}
+
+@media (max-width: 600px) {
+  .news-marquee {
+    font-size: 13px;
+    animation-duration: 35s; /* wolniejszy scroll */
+  }
+}
+
+html {
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  html {
+    font-size: 12px;
+  }
+}
+
+
+
 /* === DOPASOWANIE KALKULATORA AZUL DO MODALU === */
 .azul-calculator-content {
   width: 95%;
