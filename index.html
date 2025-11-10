@@ -10,250 +10,128 @@
 <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3069/3069186.png" type="image/png">
 
 <style>
+
 /* --- RESET --- */
 *{margin:0;padding:0;box-sizing:border-box;}
-body,html{height:100%;font-family:"Segoe UI",Arial,sans-serif;scroll-behavior:smooth;overflow-x:hidden;transition:background 0.5s,color 0.5s;}
+html,body{height:100%;font-family:"Segoe UI",Arial,sans-serif;scroll-behavior:smooth;overflow-x:hidden;transition:background .5s,color .5s;}
+body{scroll-snap-type:y proximity;}
 body.dark{background:#1e1e1e;color:#f5f5f5;}
 a{text-decoration:none;color:#2E8B57;}
 a:hover{color:#00cc66;}
-a:visited{color:#2E8B57;}
-body{scroll-snap-type:y proximity;}
 
 /* --- MENU --- */
 .menu-btn,.dark-toggle{
-  position:fixed;
-  top:65px;
-  background:rgba(0,0,0,0.5);
-  border:2px
-  solid #fff;
-  border-radius:5px;
-  color:#fff;
-  font-size:18px;
-  padding:8px 14px;
-  cursor:pointer;
-  z-index:3000;
-  transition:.3s;
+  position:fixed;top:65px;background:rgba(0,0,0,.5);
+  border:2px solid #fff;border-radius:5px;color:#fff;
+  font-size:18px;padding:8px 14px;cursor:pointer;z-index:3000;transition:.3s;
 }
-
 .menu-btn{left:20px;}
 .dark-toggle{right:20px;}
 .menu-btn:hover,.dark-toggle:hover{background-color:#2E8B57;}
+
 .menu-list{
-  position:fixed;
-  top: 140px;
-  left:30px;
-  list-style:none;
-  background:rgba(0,0,0,0.6);
-  border-radius:8px;
-  padding:10px;
-  display:none;
-  z-index:2500;
+  position:fixed;top:140px;left:30px;list-style:none;
+  background:rgba(0,0,0,.6);border-radius:8px;padding:10px;
+  display:none;z-index:2500;
 }
 .menu-list.active{display:block;}
 .menu-list li{margin:8px 0;}
 .menu-list li a{color:#fff;font-size:18px;}
 .menu-list li a:hover{color:#00cc66;}
 
-/* --- SEKCJE --- */
+/* --- SEKCJE / SLIDE --- */
 .section{
-  position: relative;
-  width: 100%;
-  min-height: 100vh; /* pełna wysokość ekranu */
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+  width:100%;min-height:100vh;padding:20px 0;position:relative;
+  overflow:hidden;display:flex;justify-content:center;align-items:flex-end;
+  scroll-snap-align:start;
 }
+.section img{
+  width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;
+  filter:brightness(.6);opacity:0;transition:opacity 1s ease;
+}
+.section.active img{opacity:1;}
 
-.section .slide-info {
-  position: relative;
-  z-index: 2;
-  color: #fff;
-  padding: 20px;
-  max-width: 90%;
+.slide-info,.slide-text{
+  opacity:0;transform:translateY(40px);transition:.8s ease;z-index:10;text-align:center;
 }
-
-.section img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;        /* dopasowanie bez zniekształceń */
-  object-position: center;  /* wyśrodkowanie kadru */
-  filter: brightness(0.6);  /* lekkie przyciemnienie dla czytelności tekstu */
-  opacity: 0;
-  transition: opacity 1s ease;
-  z-index: 0;
-}
-.section.active img{
-opacity:1;
-}
-
 .slide-info{
-  position:absolute;
-  bottom:0;
-  left:0;
-  width:100%;
-  background:rgba(0,0,0,0.65);
-  color:#fff;
-  text-align:center;
-  padding:20px 15px;
-  opacity:0;
-  transform:translateY(40px);
-  transition:all .8s ease;
-  
+  position:absolute;bottom:0;left:0;width:100%;
+  background:rgba(0,0,0,.65);color:#fff;padding:20px 15px;
 }
-
-.section.active .slide-info{opacity:1;transform:translateY(0);}
-.slide-text{
-  position:relative;text-align:center;margin-bottom:100px;
-  opacity:0;transform:translateY(40px);transition:.8s ease;z-index:10;
+.section.active .slide-info,.section.active .slide-text{opacity:1;transform:translateY(0);}
+.slide-text{margin-bottom:100px;}
+.slide-text .btn,.tournament-box a,.history-btn,.close-btn,.season-toggle,.accordion-btn{
+  background:#2E8B57;color:#fff;border:none;padding:10px 20px;border-radius:5px;
+  font-weight:bold;cursor:pointer;transition:.3s;
 }
-.section.active .slide-text{opacity:1;transform:translateY(0);}
-.slide-text .btn{
-  text-decoration:none;background:#2E8B57;color:#fff;
-  padding:10px 20px;border-radius:5px;font-weight:bold;transition:.3s;margin:0 5px;
-}
-.slide-text .btn:hover{background:#00cc66;}
+.slide-text .btn:hover,.tournament-box a:hover,.history-btn:hover,
+.close-btn:hover,.season-toggle:hover,.accordion-btn:hover{background:#00cc66;}
+.history-btn{background:#4682B4!important;}
+.history-btn:hover{background:#1E90FF!important;}
 
 /* --- TURNIEJE --- */
-#turnieje{
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-}
+#turnieje{display:flex;flex-direction:column;justify-content:center;align-items:center;}
 
 .tournament-container{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  align-items:center;
-  gap:40px;
-  max-width:1000px;
-  padding:20px;
-  z-index:10;
+  display:flex;flex-wrap:wrap;justify-content:center;align-items:center;
+  gap:40px;max-width:1000px;padding:20px;z-index:10;
 }
-
 .tournament-box{
-  background:rgba(0,0,0,0.7);padding:25px;border-radius:10px;
-  color:#fff;width:300px;text-align:center;
-  box-shadow:0 0 10px rgba(0,0,0,0.5);
-  opacity:0;transform:translateX(-100px);
-  transition:opacity .8s ease,transform .8s ease;
+  background:rgba(0,0,0,.7);padding:25px;border-radius:10px;color:#fff;
+  width:300px;text-align:center;box-shadow:0 0 10px rgba(0,0,0,.5);
+  opacity:0;transform:translateX(-100px);transition:.8s;
 }
 .section.active .tournament-box{opacity:1;transform:translateX(0);}
 .tournament-box:nth-child(2){transition-delay:.2s;}
 .tournament-box:nth-child(3){transition-delay:.4s;}
 .tournament-box h3{font-size:24px;color:#90EE90;margin-bottom:10px;}
-.tournament-box p{font-size:16px;margin-bottom:12px;}
-.tournament-box a{
-  background:#2E8B57;color:#fff;padding:8px 15px;
-  border-radius:5px;font-weight:bold;display:inline-block;transition:.3s;
-}
-.tournament-box a:hover{background:#00cc66;}
-.btn-group{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;}
-.history-btn{background-color:#4682B4!important;}
-.history-btn:hover{background-color:#1E90FF!important;}
 
-/* --- ABOUT / CONTACT --- */
+.btn-group{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;}
+
+/* --- ABOUT & CONTACT --- */
 .about-section,.contact-section{
   min-height:100vh;display:flex;justify-content:center;align-items:center;
   padding:50px 20px;text-align:center;
   background:linear-gradient(to right,#f6e6ff,#d5f4e6);
 }
-.about-content h2,.contact-content h2{font-size:36px;margin-bottom:20px;color:#2E8B57;}
-.about-content p,.contact-content p{font-size:18px;line-height:1.6;}
+.about-section h2,.contact-section h2{font-size:36px;margin-bottom:20px;color:#2E8B57;}
+.about-section p,.contact-section p{font-size:18px;line-height:1.6;}
 
 /* --- MODALE --- */
-#azulModal .close-btn {
-  position: absolute;
-  top: 15px;
-  right: 20px;
-  background: #2E8B57;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  cursor: pointer;
-  z-index: 10;
+.strategy-modal,#azulCalculatorModal{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  background:rgba(0,0,0,.7);display:flex;justify-content:center;align-items:center;
+  opacity:0;pointer-events:none;transition:.4s;z-index:999;overflow-y:auto;
 }
+.strategy-modal.active,#azulCalculatorModal.active{opacity:1;pointer-events:auto;}
 
-.strategy-modal{
-  position:fixed;
-  top:0;left:0;
-  width:100%;height:100%;
-  background:rgba(0,0,0,0.7);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  opacity:0;
-  pointer-events:none;
-  transition:.4s;
-  z-index:999;
-  overflow-y: auto;  /* włącz przewijanie pionowe jeśli treść jest za długa */
-
-
+.strategy-content,.azul-calculator-content{
+  width:95%;max-width:800px;background:rgba(255,255,255,.1);
+  backdrop-filter:blur(8px);border:2px solid rgba(255,255,255,.3);
+  border-radius:12px;padding:20px;color:#fff;box-shadow:0 0 20px rgba(0,0,0,.5);
+  max-height:90vh;overflow-y:auto;text-align:center;
 }
-.strategy-modal.active{
-  opacity:1;
-  pointer-events:auto;
-}
-
-.strategy-content{
-  background:rgba(255,255,255,0.1);
-  backdrop-filter:blur(8px);
-  border:2px solid rgba(255,255,255,0.3);
-  border-radius:12px;
-  padding:20px;
-  width:95%;
-  max-width: 700px;
-  color:#fff;
-  text-align:center;
-  font-size: clamp(14px, 2vw, 18px);
-  box-shadow:0 0 20px rgba(0,0,0,0.5);
-  max-height: 90vh;
-  overflow-y: auto;
-  position: relative;
-}
-
-.strategy-content h2{
-margin-bottom:15px;color:#90EE90;
-font-size: clamp(18px, 4vw, 26px);
-}
-
-.close-btn{
-  background-color:#2E8B57;color:#fff;border:none;padding:10px 25px;
-  border-radius:8px;font-weight:bold;cursor:pointer;transition:background .3s;
-}
-.close-btn:hover{background-color:#00cc66;}
 
 /* --- DWIE KOLUMNY --- */
 .columns-wrapper{display:flex;gap:30px;flex-wrap:wrap;}
 .column{
-  flex:1;background:rgba(255,255,255,0.08);border-radius:10px;padding:20px;
-  box-shadow:inset 0 0 10px rgba(0,0,0,0.3);
-  opacity:0;transform:translateY(40px);transition:all .6s ease;
-}
+  flex:1;background:rgba(255,255,255,.08);border-radius:10px;padding:20px;
+  box-shadow:inset 0 0 10px rgba(0,0,0,.3);opacity:0;transform:translateY(40px);
+  transition:.6s;}
 .strategy-modal.active .column{opacity:1;transform:translateY(0);}
-.column h2{color:#90EE90;margin-bottom:10px;font-size:22px;}
 
-/* --- SEZONY --- */
-.season-toggle{
-  background:#2E8B57;color:#fff;border:none;padding:10px 15px;
-  width:100%;text-align:left;cursor:pointer;font-size:16px;
-  border-radius:8px;margin-top:10px;transition:background .3s;
+/* --- NEWS BANNER --- */
+.news-banner{
+  position:fixed;top:0;left:0;width:100%;z-index:2000;height:40px;
+  display:flex;align-items:center;background:transparent;color:#fff;
 }
-.season-toggle:hover{background:#00cc66;}
-.season-toggle.active{background:#90EE90;color:#000;}
-.month-list{
-  list-style:none;padding-left:20px;margin:5px 0 10px;
-  max-height:0;overflow:hidden;transition:max-height .4s,opacity .4s;opacity:0;
+.news-marquee{
+  display:inline-block;white-space:nowrap;padding-left:100%;
+  animation:scrollText 25s linear infinite;font-size:15px;font-weight:500;
 }
-.month-list.show{opacity:1;max-height:500px;}
-.month-list li{padding:5px 0;color:#fff;}
+.news-marquee:hover{animation-play-state:paused;}
+
+@keyframes scrollText{from{transform:translateX(0);}to{transform:translateX(-100%);}}
 
 /* --- RESPONSYWNOŚĆ --- */
 @media(max-width:900px){
@@ -262,483 +140,33 @@ font-size: clamp(18px, 4vw, 26px);
   .columns-wrapper{flex-direction:column;}
   .slide-text{margin-bottom:60px;}
 }
-/* RESPONSYWNOŚĆ KALKULATORA */
-.app-window {
-  width: 100%;
-  max-width: 550px;
+@media(max-width:768px){
+  html{font-size:14px;}
+  .slide-info h2{font-size:22px;}
+  .slide-info p{font-size:14px;padding:0 10px;}
 }
-.board {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  gap: 12px;
-}
-.tile {
-  width: 100%;
-  max-width: 120px;
-  height: auto;
-}
-.tile img {
-  width: 80%;
-  height: auto;
-}
-input {
-  font-size: 16px;
-  width: 45px;
-}
-@media (max-width: 600px) {
-  .app-header h1 { font-size: 16px; }
-  #reset { font-size: 14px; }
-  .remaining { font-size: 12px; }
-}
-/* === MENU BONECZNE - RESPONSYWNOSC === */
-@media (max-width: 600px) {
-  .menu-list {
-    left: 50%;
-    top: 100px;
-    transform: translateX(-50%);
-    width: 80%;
-    text-align: center;
+@media(max-width:600px){
+  html{font-size:12px;}
+  body{scroll-snap-type:none;}
+
+  .menu-list{
+    left:50%;top:100px;transform:translateX(-50%);
+    width:80%;text-align:center;
   }
 
-  .menu-list li a {
-    font-size: 20px;
-    display: block;
-  }
+  .menu-btn,.dark-toggle{top:10px;font-size:24px;padding:10px 14px;}
+  .menu-btn{left:10px;}
+  .dark-toggle{right:10px;}
 
-  .menu-btn {
-    top: 10px;
-    left: 10px;
-    font-size: 24px;
-    padding: 10px 14px;
-  }
+  .tournament-box{width:92%;padding:18px;}
 
-  .dark-toggle {
-    top: 10px;
-    right: 10px;
-    font-size: 24px;
-  }
+  .slide-text{margin-bottom:40px;}
+  .slide-text .btn{display:block;width:85%;margin:6px auto;}
 }
-
-/* === UKŁAD BOARD KALKULATORA === */
-@media (max-width: 600px) {
-  .board {
-    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-    gap: 8px;
-  }
-
-  .tile img {
-    width: 60%;
-  }
-
-  input {
-    width: 36px;
-    font-size: 13px;
-  }
-}
-@media (max-width: 768px) {
-  .slide-info h2 {
-    font-size: 22px;
-  }
-
-  .slide-info p {
-    font-size: 14px;
-    padding: 0 10px;
-  }
-
-  .slide-text {
-    margin-bottom: 40px;
-  }
-
-  .section img {
-    object-position: center;
-  }
-}
-
-@media (max-width: 800px) {
-  .tournaments-columns {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .column {
-    width: 90%;
-  }
-}
-
-@media (max-width: 600px) {
-  .news-marquee {
-    font-size: 13px;
-    animation-duration: 35s; /* wolniejszy scroll */
-  }
-}
-
-html {
-  font-size: 16px;
-}
-
-@media (max-width: 768px) {
-  html {
-    font-size: 14px;
-  }
-}
-
-/* ===== Dostosowanie do urządzeń mobilnych ===== */
-@media (max-width: 768px) {
-  .section {
-    min-height: 80vh; /* nieco mniejsza sekcja na telefonach */
-  }
-
-  .section img {
-    object-fit: cover;      /* zachowaj wypełnienie ekranu */
-    object-position: center top; /* lekko przesunięte kadrowanie */
-    height: 100%;
-    width: 100%;
-  }
-
-  .slide-info {
-    padding: 10px;
-  }
-
-  .slide-info h2 {
-    font-size: clamp(20px, 4vw, 48px);
-	margin-bottom: 10px;
-  }
-
-  .slide-info p {
-    font-size: clamp(13px, 3vw, 18px);
-	line-height: 1.5;
-  }
-}
-
-/* ===== Drobne poprawki dla bardzo małych ekranów ===== */
-@media (max-width: 480px) {
-  .section {
-    min-height: 70vh;
-  }
-
-  .slide-info h2 {
-    font-size: clamp (22px; 4vw, 20px);
-	margin-bottom: 10px;
-  }
-
-  .slide-info p {
-    font-size: 14px;
-  }
-}
-
-
-
-
-
-/* === DOPASOWANIE KALKULATORA AZUL DO MODALU === */
-.azul-calculator-content {
-  width: 95%;
-  max-width: 800px;
-  max-height: 90vh;
-  overflow-y: auto;
-  background: rgba(255,255,255,0.15);
-  backdrop-filter: blur(8px);
-  border: 2px solid rgba(255,255,255,0.3);
-  border-radius: 12px;
-  padding: 20px;
-  color: #fff;
-  box-shadow: 0 0 20px rgba(0,0,0,0.5);
-  position: relative;
-
-  /* 🔹 Dodane wyrównanie centralne */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* === MODAL KALKULATORA AZUL === */
-#azulCalculatorModal {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  opacity: 0;
-  pointer-events: none;
-  transition: .4s;
-  z-index: 999;
-}
-
-#azulCalculatorModal.active {
-  opacity: 1;
-  pointer-events: auto;
-}
-/* Czytelniejsze kolory w kalkulatorze */
-.azul-calculator-content .app-window {
-  color: #000; /* czarny tekst na jasnym tle */
-}
-
-.azul-calculator-content .app-header h1 {
-  color: #fff; /* biały tytuł w niebieskim nagłówku */
-}
-
-.azul-calculator-content input
-.azul-calculator-content .remaining {
-  color: #000;
-}
-
-
-/* Kalkulator w modalu */
-.azul-calculator-content .app-window {
-  background: #f3f3f3;
-  border-radius: 14px;
-  overflow: hidden;
-  width: 100%;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-  border: 1px solid #b4b4b4;
-}
-
-.azul-calculator-content .app-header {
-  background: #4287f5;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 14px;
-}
-
-.azul-calculator-content .app-header img {
-  height: 36px;
-  margin-right: 10px;
-}
-
-.azul-calculator-content .app-header h1 {
-  flex: 1;
-  font-size: 18px;
-  text-align: left;
-}
-
-.azul-calculator-content #info-btn {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: #fff;
-  color: #4287f5;
-  border: none;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-/* Responsywność kalkulatora */
-@media (max-width: 600px) {
-  .azul-calculator-content .app-header h1 {
-    font-size: 16px;
-  }
-  .azul-calculator-content .board {
-    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
-  }
-  .azul-calculator-content .tile img {
-    width: 70%;
-  }
-  .azul-calculator-content input {
-    width: 40px;
-    font-size: 14px;
-  }
-}
-/* === STOPKA KALKULATORA (RESET + ZAMKNIJ NA DOLE) === */
-.calculator-footer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  padding: 15px;
-  border-top: 1px solid #ccc;
-  background: #f9f9f9;
-  margin-top: 20px;
-}
-
-.calculator-footer button {
-  background-color: #2E8B57;
-  color: white;
-  border: none;
-  padding: 10px 25px;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.calculator-footer button:hover {
-  background-color: #00cc66;
-}
-
-input.error {
-  border: 2px solid #ff4c4c !important; /* czerwone obramowanie */
-  background-color: rgba(255, 0, 0, 0.1); /* delikatne tło */
-}
-
-.accordion-btn {
-  background: #2E8B57;       /* ciemna zieleń przycisku */
-  color: #fff;                /* przycisk biały, dobrze kontrastuje */
-  cursor: pointer;
-  padding: 12px;
-  width: 100%;
-  border: none;
-  text-align: center;
-  font-size: 16px;
-  transition: 0.3s;
-  margin-top: 5px;
-  border-radius: 5px;
-}
-
-.accordion-btn:hover {
-  background: #00cc66;       /* jaśniejsza zieleń na hover */
-}
-
-.accordion-content {
-  padding: 15px;
-  display: none;
-  overflow-y: auto; /* pozwala przewijać treść, jeśli jest za długa */
-  max-height: 60vh; /* ograniczenie wysokości, aby scroll się pojawił */
-  background: transparent; /* przezroczystość */
-  color: #ffffff; /* kontrastujący, czytelny tekst */
-  margin-bottom: 5px;
-  border-radius: 0 0 5px 5px;
-  position: relative; /* dla przycisku zamknij wewnątrz */
-  text-align: center;
-}
-
-
-
-.accordion-content ul {
-  margin: 10px 0;
-  padding-left: 20px;
-  list-style: disc;
-  color: #ffffff;               /* jednolity kolor listy */
-  text-align: center;
-}
-
-.accordion-content p {
-  margin-top: 10px;
-  color: #ffffff;               /* jednolity kolor tekstu */
-  text-align: center;
-}
-.close-accordion {
-  position: sticky;   /* przyklejony przy przewijaniu */
-  bottom: 0;          /* zawsze u dołu kontenera */
-  display: block;
-  margin: 10px auto 0 auto;
-  padding: 8px 20px;
-  background: #2E8B57;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-.close-accordion:hover {
-  background: #00cc66;
-}
-/* === TURNIEJE AZUL - DWIE KOLUMNY - MODAL  === */ 
-/* Kolumny - przezroczyste tło */
-.tournaments-columns .column {
-  flex: 1 1 45%;
-  background-color: transparent; /* teraz widać tło strony */
-  padding: 15px;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  
-}
-
-/* Lista turniejów */
-.tournament-list li {
-  margin-bottom: 12px;
-  padding: 10px 12px;
-  border-radius: 6px;
-  background-color: transparent; /* przezroczyste tło */
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  color: #fff; /* tekst kontrastowy */
-}
-
-/* Przyciski pozostają jak w akordeonie */
-.btn.small-btn {
-  display: inline-block;
-  padding: 8px 16px;
-  font-size: 0.85em;
-  background-color: #2E8B57;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  text-decoration: none;
-  cursor: pointer;
-  width: fit-content;
-  margin: 0 auto; /* wycentrowanie przycisku */
-  transition: background-color 0.3s ease;
-}
-
-.btn.small-btn:hover {
-  background-color: #00cc66;
-}
-.tournaments-columns {
-display: flex;
-flex-wrap: wrap;            /* umożliwia responsywne przechodzenie kolumn pod siebie */
-justify-content: space-between;
-gap: 20px;
-}
-
-/* Pasek aktualności */
-.news-banner {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 2000;
-  background: transparent;
-  color: #fff;
-  border-bottom: 2px transparent;
-  overflow: hidden;
-  height: 40px;
-  display: flex;
-  align-items: center;
-}
-
-/* Ruchomy tekst */
-.news-marquee {
-  display: inline-block;
-  white-space: nowrap;
-  padding-left: 100%;
-  animation: scrollText 25s linear infinite;
-  font-size: 15px;
-  font-weight: 500;
-}
-.news-marquee:hover {
-  animation-play-state: paused;
-}
-
-
-@keyframes scrollText {
-  from { transform: translateX(0); }
-  to { transform: translateX(-100%); }
-}
-
-/* Styl linków w pasku */
-.news-banner a {
-  color: #FFD700;
-  font-weight: bold;
-  text-decoration: underline;
-}
-
-/* Zapobiegamy zakrywaniu nagłówka */
-header {
-  margin-top: 45px; /* dopasuj do wysokości paska */
-}
-
-
 
 
 </style>
+
 </head>
 
 <body>
