@@ -1,431 +1,302 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Trochę o planszówkach</title>
-<!-- ✅ FAVICON ZŁOTA KOSTKA -->
 <link rel="icon" type="image" href="https://i.ibb.co/R4psF5HW/dice.jpg">
-
 <style>
 /* ================================
-   GLOBALNE STYLE STRONY
+   GLOBALNE STYLE
 ================================= */
 html, body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Arial', sans-serif;
-    background: #111;
-    color: #fff;
-    scroll-behavior: smooth;
+    margin:0;
+    padding:0;
+    font-family: Arial, sans-serif;
+    background:#111;
+    color:#fff;
+    scroll-behavior:smooth;
+}
+a { text-decoration:none; color:inherit; }
+
+/* ================================
+   MENU BANNERY (dwukolumnowe)
+================================= */
+.menu-banner {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 50px;
+  padding: 20px;
+  box-sizing: border-box;
+  align-items: stretch;
+}
+
+.menu-left {
+  flex: 2; /* 2/3 szerokości */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.menu-right {
+  flex: 1; /* 1/3 szerokości */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: stretch;
+}
+
+/* info block pełnej wysokości kolumny */
+.menu-right .info-block {
+  min-height: 80vh;
+  height: 100%;
 }
 
 /* ================================
-   MENU BANNERY (ONE PAGE)
+   GAME BLOCK
 ================================= */
-.menu-banner {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-}
-
 .game-block {
-    position: relative;
-    display: flex;
-    width: 100%;
-    height: 33.33vh; /* 1/3 wysokości ekranu */
-    overflow: hidden;
-    cursor: pointer;
-    background-size: cover;
-    background-position: center;
-    transition: transform 0.5s ease, box-shadow 0.5s ease;
+    position:relative;
+    display:flex;
+    height:33.33vh;
+    background-size:cover;
+    background-position:center;
+    cursor:pointer;
+    overflow:hidden;
+    opacity:0;
+    transform:translateY(50px);
+    transition:0.8s ease;
+    border-radius:12px;
 }
+.game-block.show { opacity:1; transform:translateY(0) scale(1.02); }
 
 .game-block::before {
     content:'';
-    position:absolute; 
-    top:0; left:0; 
+    position:absolute; top:0; left:0;
     width:100%; height:100%;
-    background: linear-gradient(to right, rgba(0,0,0,0.7) 40%, rgba(0,0,0,0.3) 100%);
-    z-index:1; 
-    transition: background 0.5s ease;
+    background:linear-gradient(to right, rgba(0,0,0,0.7) 40%, rgba(0,0,0,0.3) 100%);
+    z-index:1;
+    transition:0.5s ease;
+    border-radius:12px;
 }
-
-.game-block:hover {
-    transform: scale(1.02);
-    box-shadow: 0 15px 50px rgba(0,0,0,0.7);
-}
-
 .game-block:hover::before {
-    background: linear-gradient(to right, rgba(0,0,0,0.8) 40%, rgba(0,0,0,0.4) 100%);
+    background:linear-gradient(to right, rgba(0,0,0,0.8) 40%, rgba(0,0,0,0.4) 100%);
 }
-
-/* TEKST NA BANNERZE */
 .game-text {
-    position: relative; 
-    z-index:2; 
+    position:relative; z-index:2;
     flex:1;
-    display:flex; 
-    flex-direction: column; 
-    justify-content:center; 
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
     align-items:center;
-    text-align:center; 
-    padding:0 40px; 
-    opacity:0; 
-    transform:translateX(-50px);
-    animation: slideFadeIn 1s forwards;
+    text-align:center;
+    padding:0 24px;
+    box-sizing:border-box;
 }
-
-.game-text h2 {
-    font-size: 36px;
-    margin-bottom: 15px; 
-    color: #fff; 
-    text-shadow:0 4px 12px rgba(0,0,0,0.7);
-}
-
-.game-text p {
-    font-size: 18px; 
-    line-height:1.4; 
-    color: #ddd; 
-    margin-bottom: 20px;
-}
+.game-text h1, .game-text h2 { font-size:32px; margin:0 0 12px 0; text-shadow:0 4px 12px rgba(0,0,0,0.7); }
+.game-text p { font-size:16px; color:#ddd; margin:0 0 12px 0; }
 
 /* ================================
-   BUTTONY - CTA / AKORDEON / MENU
+   BUTTONY
 ================================= */
-.cta-btn {
-    padding: 12px 28px;
-    font-size: 16px;
-    color: #fff;
-    background: #2E8B57;
-    border: 2px solid #2E8B57;
-    border-radius: 30px;
-    text-decoration: none;
-    display: inline-block;
-    text-align: center;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    margin-top: 20px;
-}
-
-.cta-btn:hover {
-    background: #00cc66;
-    border-color: #00cc66;
-}
-
-/* BUTTONY AKORDEONU / TURNIEJE w sekcjach gier */
-.game-section .action-btn, .game-section .accordion-btn {
-    padding: 12px 28px;
+.cta-btn, .action-btn, .accordion-btn, .small-cta {
+    padding:12px 28px;
     font-size:16px;
-    color:#fff;
-    background:#2E8B57;
-    border:2px solid #2E8B57;
     border-radius:30px;
+    border:2px solid #2E8B57;
+    background:#2E8B57;
+    color:#fff;
     cursor:pointer;
     transition: all 0.3s ease;
     margin:5px;
+    display:inline-block;
+    text-align:center;
+    min-width:120px;
+    line-height:1;
 }
-
-.game-section .action-btn:hover, .game-section .accordion-btn:hover {
+.cta-btn:hover, .action-btn:hover, .accordion-btn:hover {
     background:#00cc66;
     border-color:#00cc66;
     transform:scale(1.05);
-    box-shadow:0 4px 20px rgba(0,204,102,0.6); 
+    box-shadow:0 4px 20px rgba(0,204,102,0.6);
 }
 
 /* ================================
-   ANIMACJA TEKSTU NA BANNERZE
-================================= */
-@keyframes slideFadeIn {
-    to{ 
-        opacity:1; 
-        transform:translateX(0); 
-    }
-}
-
-/* ================================
-   SEKCJE GIER FULL WIDTH
+   SEKCJE GIER
 ================================= */
 .game-section {
-    position: relative;
-    width: 100%;
-    height: 80vh;
-    overflow: hidden;
-    margin-bottom: 50px;
+    position:relative;
+    width:100%;
+    height:80vh;
+    margin-bottom:50px;
+    background-size:cover;
+    background-position:center;
+    border-radius:8px;
+    overflow:hidden;
 }
-
 .game-section .overlay {
-    position: absolute;
-    top:0; left:0;
+    position:absolute; top:0; left:0;
     width:100%; height:100%;
     background: rgba(0,0,0,0.6);
     z-index:1;
 }
-
 .game-section .content {
-    position: relative;
+    position:relative;
     z-index:2;
     display:flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    text-align: center;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    height:100%;
+    text-align:center;
     padding:0 20px;
-    color: #fff;
 }
-
-.game-section h2 {
-    font-size: 48px;
-    margin-bottom: 20px;
-    text-shadow:0 4px 12px rgba(0,0,0,0.7);
-}
-
-.game-section p {
-    font-size: 20px;
-    max-width: 800px;
-    margin-bottom: 30px;
-    text-shadow:0 3px 10px rgba(0,0,0,0.6);
-}
+.game-section h2{ font-size:44px; margin-bottom:20px; text-shadow:0 4px 12px rgba(0,0,0,0.7); }
+.game-section p{ font-size:18px; max-width:800px; margin-bottom:30px; text-shadow:0 3px 10px rgba(0,0,0,0.6); }
 
 /* ================================
    MODALE
 ================================= */
 .modal {
-    display: none; 
-    position: fixed; 
+    display:none;
+    position:fixed;
     top:0; left:0;
     width:100%; height:100%;
     background: rgba(0,0,0,0.8);
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
+    justify-content:center;
+    align-items:center;
+    z-index:999;
 }
-
 .modal-content {
-    background: #222;
-    padding: 40px;
-    border-radius: 20px;
-    max-width: 600px;
-    color: #fff;
-    text-align: center;
-    position: relative;
+    background:#222;
+    padding:30px;
+    border-radius:12px;
+    max-width:720px;
+    width:90%;
+    text-align:center;
+    position:relative;
 }
-
-.modal-content span {
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    cursor: pointer;
-    font-size: 28px;
-}
+.modal-content span { position:absolute; top:8px; right:12px; cursor:pointer; font-size:28px; }
 
 /* ================================
-   AKORDEON STRATEGIA
+   AKORDEONY / TABS
 ================================= */
-.accordion-content {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.4s ease;
-    background: rgba(255,255,255,0.05);
-    padding: 0 20px;
-    border-radius: 15px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
-    color: #fff;
-    margin-top: 10px;
-}
+.accordion-content { max-height:0; overflow:hidden; transition:0.35s ease; background:rgba(255,255,255,0.03); padding:0 20px; border-radius:10px; margin-top:10px;}
+.tab-buttons { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-bottom:15px;}
+.tab-btn { padding:8px 20px; border-radius:30px; background:#2E8B57; border:2px solid #2E8B57; color:#fff; cursor:pointer; transition:0.3s;}
+.tab-btn:hover{ background:#00cc66; border-color:#00cc66; }
+.tab-btn.active{ background:#00cc66; border-color:#00cc66; }
+.tab-content{ display:none; color:#fff; }
+.tab-content.active{ display:block; }
 
 /* ================================
-   ZAKŁADKI WEWNĄTRZ AKORDEONU
+   SEZONY / ARCHIWUM TURNIEJÓW
 ================================= */
-.tab-buttons {
-    display: flex;
-    flex-wrap: wrap; /* umożliwia przenoszenie przy mniejszych ekranach */
-    gap: 10px;
-    margin-bottom: 15px;
-    justify-content: center;
-}
-
-.tab-btn {
-    padding: 8px 20px;
-    border: 2px solid #2E8B57;
-    border-radius: 30px;
-    background: #2E8B57;
-    color: #fff;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.tab-btn:hover { 
-    background: #00cc66; 
-    border-color: #00cc66;  
-}
-
-.tab-btn.active { 
-    background:#00cc66; 
-    border-color:#00cc66; 
-}
-
-.tab-content { 
-    display: none; 
-    color: #fff; 
-}
-
-.tab-content.active { 
-    display: block; 
-}
+.season { background: rgba(255,255,255,0.03); border-radius:10px; margin-bottom:10px; overflow:hidden; }
+.season-btn { width:100%; text-align:center; background:#2E8B57; color:#fff; border:none; padding:12px 20px; font-size:18px; cursor:pointer; transition:0.3s; border-radius:10px;}
+.season-btn:hover{ background:#00cc66; }
+.season-content{ max-height:0; overflow:hidden; transition:0.35s ease; background:rgba(0,0,0,0.3); padding:0 10px 10px; }
+.season-content ul li{ padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.06); }
 
 /* ================================
-   RESPONSYWNOŚĆ GLOBALNA
+   RESPONSYWNOŚĆ
 ================================= */
-@media (max-width:1200px){
-    .game-section h2{ font-size: 42px; }
-    .game-section p{ font-size: 18px; }
+@media(max-width:900px){
+    .menu-banner { flex-direction: column; padding: 12px; }
+    .menu-left, .menu-right { width:100%; }
+    .game-section h2{font-size:36px;}
+    .game-section p{font-size:16px;}
+    .cta-btn, .action-btn, .accordion-btn, .small-cta{padding:10px 20px; font-size:14px;}
+    .tab-btn{padding:6px 12px; font-size:14px;}
 }
-
-@media (max-width:900px){
-    /* Banery menu dopasowują się do małych ekranów */
-    .game-block{
-        flex-direction: column;
-        height: auto;
-    } 
-    .game-text{
-        padding: 20px;
-    } 
-    /* Fonty i paddingi w sekcjach gier */
-    .game-section h2{font-size:36px;} 
-    .game-section p{font-size:16px;} 
-    .cta-btn, .game-section .action-btn, .game-section .accordion-btn {
-        padding: 10px 20px;
-        font-size: 14px;
-    }
-    .tab-btn {
-        padding: 6px 12px;
-        font-size: 14px;
-    }
+@media(max-width:600px){
+    .game-text h1 { font-size:24px; }
+    .game-section h2{font-size:28px;}
+    .game-section p{font-size:14px;}
+    .cta-btn, .action-btn, .accordion-btn, .small-cta{padding:8px 16px; font-size:12px;}
+    .tab-btn{padding:5px 10px; font-size:12px;}
 }
-
-@media (max-width:600px){
-    .game-section h2{font-size:28px;} 
-    .game-section p{font-size:14px;} 
-    .cta-btn, .game-section .action-btn, .game-section .accordion-btn {
-        padding: 8px 16px;
-        font-size: 12px;
-    }
-    .tab-btn {
-        padding: 5px 10px;
-        font-size: 12px;
-    }
-}
-.tab-content { display: none; }
-.tab-content.active { display: block; }
-
 </style>
 </head>
 <body>
 
-<!-- MENU -->
+<!-- ================================
+     MENU BANNERY (2 kolumny)
+================================= -->
 <section class="menu-banner">
-  <div class="game-block" onclick="location.href='#azulSection'" style="background-image: url('https://cf.geekdo-images.com/-69xmL8Kawid8RF20Ye-wA__imagepage/img/QfQgpOaLc-oqYFs9t6nsCq6k71o=/fit-in/900x600/filters:no_upscale():strip_icc()/pic4120378.jpg');">
-    <div class="game-text">
-      <h2>Azul</h2>
-      <p>Gra strategiczna z kafelkami, która wymaga planowania i kreatywności.</p>
-      <a href="#azulSection" class="cta-btn">Dowiedz się więcej</a>
+  <div class="menu-left">
+    <!-- Azul -->
+    <div class="game-block" data-target="#azulSection" style="background-image:url('https://cf.geekdo-images.com/-69xmL8Kawid8RF20Ye-wA__imagepage/img/QfQgpOaLc-oqYFs9t6nsCq6k71o=/fit-in/900x600/filters:no_upscale():strip_icc()/pic4120378.jpg');">
+      <div class="game-text">
+        <h1>Azul</h1>
+        <a href="#azulSection" class="cta-btn">Dowiedz się więcej</a>
+      </div>
+    </div>
+
+    <!-- Splendor -->
+    <div class="game-block" data-target="#splendorSection" style="background-image:url('https://cf.geekdo-images.com/dza4hbgXqVqaJtDzXmdpig__imagepage/img/bloVxq4U_mODNxwgEx4NxM02WnM=/fit-in/900x600/filters:no_upscale():strip_icc()/pic1916681.jpg');">
+      <div class="game-text">
+        <h1>Splendor</h1>
+        <a href="#splendorSection" class="cta-btn">Dowiedz się więcej</a>
+      </div>
+    </div>
+
+    <!-- Middle Ages -->
+    <div class="game-block" data-target="#middleagesSection" style="background-image:url('https://cf.geekdo-images.com/f-Fgc16niFhDT6gqSTzCdg__imagepage@2x/img/nZm1C8C4gyxpFIH1NzLvG01XSTI=/fit-in/1800x1200/filters:strip_icc()/pic8792655.jpg');">
+      <div class="game-text">
+        <h1>Middle Ages</h1>
+        <a href="#middleagesSection" class="cta-btn">Dowiedz się więcej</a>
+      </div>
     </div>
   </div>
 
-  <div class="game-block" onclick="location.href='#splendorSection'" style="background-image: url('https://cf.geekdo-images.com/dza4hbgXqVqaJtDzXmdpig__imagepage/img/bloVxq4U_mODNxwgEx4NxM02WnM=/fit-in/900x600/filters:no_upscale():strip_icc()/pic1916681.jpg');">
-    <div class="game-text">
-      <h2>Splendor</h2>
-      <p>Zostań handlarzem klejnotów! Strategia i szybkie decyzje.</p>
-      <a href="#splendorSection" class="cta-btn">Dowiedz się więcej</a>
-    </div>
-  </div>
-
-  <div class="game-block" onclick="location.href='#middleagesSection'" style="background-image: url('https://cf.geekdo-images.com/f-Fgc16niFhDT6gqSTzCdg__imagepage@2x/img/nZm1C8C4gyxpFIH1NzLvG01XSTI=/fit-in/1800x1200/filters:strip_icc()/pic8792655.jpg');">
-    <div class="game-text">
-      <h2>Middle Ages</h2>
-      <p>Przenieś się do średniowiecza! Buduj miasta i rozwijaj armię.</p>
-      <a href="#middleagesSection" class="cta-btn">Dowiedz się więcej</a>
+  <div class="menu-right">
+    <div class="game-block info-block" style="background-image:url('https://i.ibb.co/XYZ/info-bg.jpg'); cursor:default;">
+      <div class="game-text">
+        <h2>O stronie</h2>
+        <p>Znajdziesz tutaj najlepsze gry planszowe, strategie, turnieje i archiwum wyników zwycięzców w spójnej i przyjaznej formie wizualnej.</p>
+        <a href="#aboutSection" class="cta-btn">Dowiedz się więcej</a>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- SEKCJA AZUL -->
-<section id="azulSection" class="game-section" style="background-image:url('https://cf.geekdo-images.com/-69xmL8Kawid8RF20Ye-wA__imagepage/img/QfQgpOaLc-oqYFs9t6nsCq6k71o=/fit-in/900x600/filters:no_upscale():strip_icc()/pic4120378.jpg'); background-size:cover; background-position:center;">
+<!-- ================================
+     SEKCJA AZUL
+================================= -->
+<section id="azulSection" class="game-section" style="background-image:url('https://cf.geekdo-images.com/-69xmL8Kawid8RF20Ye-wA__imagepage/img/QfQgpOaLc-oqYFs9t6nsCq6k71o=/fit-in/900x600/filters:no_upscale():strip_icc()/pic4120378.jpg');">
   <div class="overlay"></div>
   <div class="content">
     <h2>Azul</h2>
     <p>Gra strategiczna z kafelkami. Zbuduj najpiękniejsze mozaiki!</p>
-    <button class="action-btn" onclick="document.getElementById('modalAzul').style.display='flex'">Turnieje</button>
+    <button class="action-btn" data-open="modalAzul">Turnieje</button>
     <button class="accordion-btn">Strategia</button>
     <div class="accordion-content">
-      <div class="tabs">
-        <div class="tab-buttons">
-          <button class="tab-btn active" data-tab="tab1">🧭 Runda 1 – Fundamenty</button>
-          <button class="tab-btn" data-tab="tab2">🧭 Runda 2 – Planowanie wzoru</button>
-          <button class="tab-btn" data-tab="tab3">🧭 Runda 3 – Punkty z połączeń</button>
-          <button class="tab-btn" data-tab="tab4">🧭 Runda 4 – Maksymalizacja punktów</button>
-          <button class="tab-btn" data-tab="tab5">🧭 Runda 5 – Finał</button>
-        </div>
-        <div class="tab-content active" id="tab1">
-          Zbuduj bazę do punktowania w późniejszych rundach.<br><br>
-          Wybieraj kolory, których jest dużo na stole.<br><br>
-          Skup się na środkowych kolumnach (3, 4).<br><br>
-          Układaj po 2–3 płytki, unikaj przepełnienia.<br><br>
-          ✅ Rezultat: 1–2 wiersze częściowo ułożone, 0–1 punktu kary.<br><br>
-        </div>
-        <div class="tab-content" id="tab2">
-            Przygotuj przestrzeń pod długoterminowe kolumny.<br><br>
-            Dobierz kolory pasujące do rozpoczętych wierszy.<br><br>
-            Ukończ 1 wiersz, by zdobyć premię.<br><br>
-            Obserwuj przeciwników i blokuj potrzebne im kolory.<br><br>
-            ✅ Rezultat: 2–3 wiersze częściowo gotowe, 1 pełny wiersz.<br><br>
-        </div>
-        <div class="tab-content" id="tab3">
-            Układaj płytki tak, by łączenia pionowe i poziome dawały dodatkowe punkty.<br><br>
-            Możesz poświęcić 1–2 punkty kary, jeśli ukończysz kolumnę lub wiersz.<br><br>
-            Przygotuj alternatywne kolory, jeśli zaczyna ich brakować.<br><br>
-            ✅ Rezultat: 2 ukończone wiersze, początek 1–2 kolumn, 1 kolor z trzema płytkami.<br><br>
-        </div>
-        <div class="tab-content" id="tab4">
-            Ukończ pierwszą kolumnę (7 pkt).<br><br>
-            Zbieraj brakujące kolory, by dokończyć zestawy.<br><br>
-            Nie bierz za dużo — minimalizuj ryzyko kary.<br><br>
-            ✅ Rezultat: 3–4 pełne wiersze, 1 kolumna ukończona, plan na ostatnią rundę.<br><br>
-        </div>
-        <div class="tab-content" id="tab5">
-            Ukończ kolory i kolumny, maksymalizując punkty końcowe.<br><br>
-            Ryzykuj lekko — kara -1 lub -2 jest akceptowalna, jeśli kończysz kolumnę lub kolor.<br><br>
-            Nie zostawiaj pustych miejsc — każda płytka = potencjalne punkty.<br><br>
-            ✅ Rezultat: 5+ pełnych wierszy, 2 kolumny, 1–2 ukończone kolory.<br><br>
-             
-        </div>
-      </div>
+      <p>Twórz mozaiki, planuj ruchy i minimalizuj straty. Obserwuj przeciwników.</p>
     </div>
-    
   </div>
 </section>
 
 <!-- MODAL AZUL -->
 <div id="modalAzul" class="modal">
   <div class="modal-content">
-    <span onclick="document.getElementById('modalAzul').style.display='none'">&times;</span>
+    <span class="modal-close" data-close="modalAzul">&times;</span>
     <h2>Turnieje Azul</h2>
-    <a href="https://boardgamearena.com/tournament?id=489766" target="_blank" class="cta-btn">14/11/2025 Round 1 - Zapisz się</a>
+    <a href="#" class="cta-btn">14/11/2025 Round 1 - Zapisz się</a>
   </div>
 </div>
 
-<!-- SEKCJA SPLENDOR -->
-<section id="splendorSection" class="game-section" style="background-image:url('https://cf.geekdo-images.com/dza4hbgXqVqaJtDzXmdpig__imagepage/img/bloVxq4U_mODNxwgEx4NxM02WnM=/fit-in/900x600/filters:no_upscale():strip_icc()/pic1916681.jpg'); background-size:cover; background-position:center;">
+<!-- ================================
+     SEKCJA SPLENDOR
+================================= -->
+<section id="splendorSection" class="game-section" style="background-image:url('https://cf.geekdo-images.com/dza4hbgXqVqaJtDzXmdpig__imagepage/img/bloVxq4U_mODNxwgEx4NxM02WnM=/fit-in/900x600/filters:no_upscale():strip_icc()/pic1916681.jpg');">
   <div class="overlay"></div>
   <div class="content">
     <h2>Splendor</h2>
     <p>Zostań handlarzem klejnotów! Strategia i szybkie decyzje.</p>
-    <button class="action-btn" onclick="document.getElementById('modalSplendor').style.display='flex'">Turnieje</button>
+    <button class="action-btn" data-open="modalSplendor">Turnieje</button>
     <button class="accordion-btn">Strategia</button>
     <div class="accordion-content">
-      <h3>Plan gry i strategia</h3>
       <p>Rozwijaj handel klejnotami, zdobywaj karty i punkty. Planuj taktycznie, aby wyprzedzić przeciwników.</p>
     </div>
   </div>
@@ -434,22 +305,23 @@ html, body {
 <!-- MODAL SPLENDOR -->
 <div id="modalSplendor" class="modal">
   <div class="modal-content">
-    <span onclick="document.getElementById('modalSplendor').style.display='none'">&times;</span>
+    <span class="modal-close" data-close="modalSplendor">&times;</span>
     <h2>Turnieje Splendor</h2>
     <p>Szczegóły turniejów i wydarzeń.</p>
   </div>
 </div>
 
-<!-- SEKCJA MIDDLE AGES -->
-<section id="middleagesSection" class="game-section" style="background-image:url('https://cf.geekdo-images.com/f-Fgc16niFhDT6gqSTzCdg__imagepage@2x/img/nZm1C8C4gyxpFIH1NzLvG01XSTI=/fit-in/1800x1200/filters:strip_icc()/pic8792655.jpg'); background-size:cover; background-position:center;">
+<!-- ================================
+     SEKCJA MIDDLE AGES
+================================= -->
+<section id="middleagesSection" class="game-section" style="background-image:url('https://cf.geekdo-images.com/f-Fgc16niFhDT6gqSTzCdg__imagepage@2x/img/nZm1C8C4gyxpFIH1NzLvG01XSTI=/fit-in/1800x1200/filters:strip_icc()/pic8792655.jpg');">
   <div class="overlay"></div>
   <div class="content">
     <h2>Middle Ages</h2>
     <p>Przenieś się do średniowiecza! Buduj miasta i rozwijaj armię.</p>
-    <button class="action-btn" onclick="document.getElementById('modalMiddleAges').style.display='flex'">Turnieje</button>
+    <button class="action-btn" data-open="modalMiddleAges">Turnieje</button>
     <button class="accordion-btn">Strategia</button>
     <div class="accordion-content">
-      <h3>Plan gry i strategia</h3>
       <p>Zarządzaj miastem, armią i ekonomią. Planuj ruchy strategicznie, aby zdobyć przewagę nad innymi graczami.</p>
     </div>
   </div>
@@ -457,89 +329,159 @@ html, body {
 
 <!-- MODAL MIDDLE AGES -->
 <div id="modalMiddleAges" class="modal">
-    <div class="modal-content">
-      <span onclick="document.getElementById('modalMiddleAges').style.display='none'">&times;</span>
-      <h2>Turnieje Middle Ages</h2>
-  
-      <!-- Zakładki -->
-      <div class="tab-buttons">
-        <button class="tab-btn active" onclick="openTournamentTab('plannedMA', this)">Zaplanowane</button>
-        <button class="tab-btn" onclick="openTournamentTab('archiveMA', this)">Archiwalne</button>
-      </div>
-  
-      <!-- Zaplanowane -->
-      <div id="plannedMA" class="tab-content active">
-        <ul style="list-style:none; padding:0; line-height:1.8;">
-          <li><strong>⚔ Turniej Książąt</strong> — 14.03.2025 — <a href="#" class="cta-btn">Zapisz się</a></li>
-          <li><strong>🏰 Oblężenie Zamku</strong> — 02.04.2025 — <a href="#" class="cta-btn">Zapisz się</a></li>
-          <li><strong>⚖ Wielka Liga Rycerska</strong> — 21.05.2025 — <a href="#" class="cta-btn">Zapisz się</a></li>
-        </ul>
-      </div>
-  
-      <!-- Archiwalne -->
-      <div id="archiveMA" class="tab-content">
-        <ul style="list-style:none; padding:20; line-height:1.8;">
-      Runda 1<br><br>
-      Runda 2
-      </div>
-  
-    </div>
-  </div>
-  
+  <div class="modal-content">
+    <span class="modal-close" data-close="modalMiddleAges">&times;</span>
+    <h2>Turnieje Middle Ages</h2>
 
-  <script>
-    // ================================
-    // AKORDEONY STRATEGIA
-    // ================================
-    document.querySelectorAll(".accordion-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            const content = btn.nextElementSibling;
-            if(content.style.maxHeight){
-                content.style.maxHeight = null;
-            } else {
-                content.style.maxHeight = content.scrollHeight + "px";
-            }
-        });
+    <div class="tab-buttons">
+      <button class="tab-btn active" data-tab="plannedMA">Zaplanowane</button>
+      <button class="tab-btn" data-tab="archiveMA">Archiwalne</button>
+    </div>
+
+    <!-- ZAPLANOWANE -->
+    <div id="plannedMA" class="tab-content active">
+      <ul style="list-style:none; padding:0; line-height:1.8;">
+        <li><strong>⚔ Turniej Książąt</strong> — 14.03.2025 — <a href="#" class="cta-btn small-cta">Zapisz się</a></li>
+        <li><strong>🏰 Oblężenie Zamku</strong> — 02.04.2025 — <a href="#" class="cta-btn small-cta">Zapisz się</a></li>
+        <li><strong>⚖ Wielka Liga Rycerska</strong> — 21.05.2025 — <a href="#" class="cta-btn small-cta">Zapisz się</a></li>
+      </ul>
+    </div>
+
+    <!-- ARCHIWUM -->
+    <div id="archiveMA" class="tab-content">
+      <button class="season-btn">Sezon 1 2024/2025</button>
+        <div class="season-content">
+          <ul style="list-style:none; padding:10px 20px; line-height:1.8;">
+		  <li><strong> Runda 1 Grudzień 2024:</strong> Zwycięzcy: 🥇jiol9k 🥈GéLyon 🥉Steph3kKRK</li>
+            <li><strong> Runda 2Styczeń 2025:</strong> Zwycięzcy: 🥇Mooh21 🥈Zeispharn 🥉19Duffy83 🥉Bansh3e </li>
+			<li><strong> Runda 3 Luty 2025:</strong> Zwycięzcy: 🥇Zeispharn 🥈Captain Bacon 🥉Gilgamesch  </li>
+			<li><strong> Runda 4 Marzec 2025:</strong> Zwycięzcy: 🥇tinabreve 🥈swilv 🥉CrazyFogs </li>
+			<li><strong> Runda 5 Kwiecień 2025:</strong> Zwycięzcy: 🥇Captain Bacon 🥈Cutha 🥉Malk1983 </li>
+			<li><strong> Runda 6 Maj 2025:</strong> Zwycięzcy: 🥇Martan7 🥈Bansh3e 🥉Mera80 </li>
+			<li><strong> Runda 7 Czerwiec 2025:</strong> Zwycięzcy: 🥇metawin2545 🥈bosojeu 🥉Sirangelic </li>
+			<li><strong> Runda 8 Lipiec 2025:</strong> Zwycięzcy: 🥇amberyavi 🥈HaktarLT 🥉JenniferDT </li>
+			<li><strong> Runda 9 Sierpień 2025:</strong> Zwycięzcy: 🥇Mooh21 🥈Zeispharn 🥉19Duffy83 🥉Bansh3e </li>
+			<li><strong> Runda 10 Wrzesień 2025:</strong> Zwycięzcy: 🥇Mooh21 🥈Zeispharn 🥉19Duffy83 🥉Bansh3e </li>
+			<li><strong> Runda 11 Październik 2025:</strong> Zwycięzcy: 🥇Mooh21 🥈Zeispharn 🥉19Duffy83 🥉Bansh3e </li>
+			<li><strong> Runda 12 Listopad 2025:</strong> Zwycięzcy: Turniej w trakcie </li>
+          </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ================================
+     SKRYPT GŁÓWNY
+================================= -->
+<script>
+/* ================================
+   ANIMACJA BANERÓW
+   (wywołujemy po load, żeby tła zdążyły się wczytać)
+================================= */
+window.addEventListener("load", () => {
+  document.querySelectorAll(".game-block").forEach((b, i) => {
+    setTimeout(() => b.classList.add("show"), i * 200);
+  });
+});
+
+/* ================================
+   KLIKALNE GAME-BLOCKS (scroll do sekcji)
+================================= */
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll('.game-block').forEach(block => {
+    block.addEventListener('click', (e) => {
+      // Jeśli kliknięto element wewnątrz który jest linkiem <a>, pozwól by on zadziałał
+      if (e.target.tagName.toLowerCase() === 'a') return;
+      const target = block.dataset.target;
+      if (target) {
+        const el = document.querySelector(target);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     });
-    
-    // ================================
-    // ZAMKNIĘCIE MODALA PO KLIKNIĘCIU POZA CONTENT
-    // ================================
-    window.onclick = function(event) {
-        document.querySelectorAll(".modal").forEach(modal => {
-            if(event.target == modal){
-                modal.style.display = "none";
-            }
-        });
-    }
-    
-    // ================================
-    // TABY / ZAKŁADKI W MODALU MIDDLE AGES
-    // ================================
-    function openTournamentTab(tabId, el) {
-        // Ukryj wszystkie tab-content w modalu Middle Ages
-        document.querySelectorAll('#modalMiddleAges .tab-content').forEach(t => t.classList.remove('active'));
-    
-        // Dezaktywuj wszystkie przyciski w modalu Middle Ages
-        document.querySelectorAll('#modalMiddleAges .tab-btn').forEach(b => b.classList.remove('active'));
-    
-        // Aktywuj wybraną zakładkę
-        document.getElementById(tabId).classList.add('active');
-        el.classList.add('active');
-    }
-    
-    // ================================
-    // OPCJONALNIE: zamknięcie modali przy ESC
-    // ================================
-    document.addEventListener("keydown", function(event) {
-        if(event.key === "Escape") {
-            document.querySelectorAll(".modal").forEach(modal => {
-                modal.style.display = "none";
-            });
-        }
+  });
+
+  /* ================================
+     AKORDEONY (Strategia)
+  =================================== */
+  document.querySelectorAll(".accordion-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const content = btn.nextElementSibling;
+      content.style.maxHeight = content.style.maxHeight ? null : content.scrollHeight + "px";
     });
-    </script>
-    
+  });
+
+  /* ================================
+     MODALE: otwieranie, zamykanie
+  =================================== */
+  // otwieranie przez data-open
+  document.querySelectorAll('[data-open]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const id = btn.getAttribute('data-open');
+      const modal = document.getElementById(id);
+      if (modal) modal.style.display = 'flex';
+    });
+  });
+  // zamykanie przez elementy z data-close lub .modal-close
+  document.querySelectorAll('[data-close], .modal-close').forEach(closeBtn => {
+    closeBtn.addEventListener('click', (e) => {
+      const id = closeBtn.getAttribute('data-close');
+      if (id) {
+        const modal = document.getElementById(id);
+        if (modal) modal.style.display = 'none';
+        return;
+      }
+      // jeśli brak data-close, zamykamy rodzica modal
+      const modal = closeBtn.closest('.modal');
+      if (modal) modal.style.display = 'none';
+    });
+  });
+  // zamykanie kliknięciem w tło
+  window.addEventListener('click', (e) => {
+    document.querySelectorAll('.modal').forEach(mod => {
+      if (e.target === mod) mod.style.display = 'none';
+    });
+  });
+  // zamykanie Esc
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal').forEach(mod => mod.style.display = 'none');
+    }
+  });
+
+  /* ================================
+     TABY W MODAL MIDDLE AGES
+  =================================== */
+  document.querySelectorAll('#modalMiddleAges .tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-tab');
+      // zmiana aktywnego przycisku
+      document.querySelectorAll('#modalMiddleAges .tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      // pokaz odpowiedniej zawartości
+      document.querySelectorAll('#modalMiddleAges .tab-content').forEach(tc => tc.classList.remove('active'));
+      const target = document.getElementById(id);
+      if (target) target.classList.add('active');
+    });
+  });
+
+  /* ================================
+     ROZWIJANIE SEZONÓW (ARCHIWUM)
+  =================================== */
+  document.querySelectorAll(".season-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const content = btn.nextElementSibling;
+      if (!content) return;
+      if (content.style.maxHeight) {
+        content.style.maxHeight = null;
+      } else {
+        content.style.maxHeight = content.scrollHeight + "px";
+      }
+    });
+  });
+
+});
+</script>
+
 </body>
 </html>
-
